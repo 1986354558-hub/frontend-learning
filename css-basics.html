@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS 选择器 & Flex 布局 — 大白话教程</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+    background: #f0f2f5;
+    color: #1a1a2e;
+    line-height: 1.7;
+  }
+
+  /* ===== 顶部导航 ===== */
+  .topbar {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar h1 { font-size: 20px; font-weight: 700; }
+  .topbar .subtitle { color: #888; font-size: 13px; }
+  .topbar nav { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+  .topbar nav a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    transition: all .2s;
+  }
+  .topbar nav a:hover, .topbar nav a.active { background: #e94560; color: #fff; }
+
+  /* ===== 通用卡片 ===== */
+  .section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 20px;
+  }
+  .section h2 {
+    font-size: 26px;
+    margin-bottom: 8px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #e94560;
+    display: inline-block;
+  }
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 24px;
+    margin-top: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  }
+  .card h3 {
+    font-size: 18px;
+    margin-bottom: 6px;
+    color: #e94560;
+  }
+  .explain {
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    padding: 12px 16px;
+    margin: 10px 0 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+  }
+  .explain strong { color: #e65100; }
+
+  /* ===== Demo 区 ===== */
+  .demo-area {
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 12px;
+    background: #fafafa;
+  }
+  .demo-area .controls {
+    margin-bottom: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .demo-area .controls button {
+    padding: 6px 16px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all .15s;
+  }
+  .demo-area .controls button:hover { border-color: #e94560; color: #e94560; }
+  .demo-area .controls button.active { background: #e94560; color: #fff; border-color: #e94560; }
+  .demo-area .controls select {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 13px;
+    background: #fff;
+  }
+
+  /* ===== 选择器 Demo 元素 ===== */
+  .sel-box {
+    display: inline-block;
+    width: 48px; height: 48px;
+    background: #3498db;
+    color: #fff;
+    text-align: center;
+    line-height: 48px;
+    border-radius: 8px;
+    margin: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    transition: all .3s;
+  }
+  .sel-box.highlight { background: #e94560; transform: scale(1.1); box-shadow: 0 0 0 4px rgba(233,69,96,.3); }
+
+  /* 属性选择器demo */
+  .attr-demo { display: flex; gap: 8px; flex-wrap: wrap; }
+  .attr-demo input { padding: 8px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 13px; width: 120px; }
+  .attr-demo input.highlight-attr { border-color: #e94560; background: #fff0f3; }
+
+  /* 伪类 demo */
+  .pseudo-list { list-style: none; }
+  .pseudo-list li {
+    padding: 8px 14px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    transition: background .2s;
+  }
+  .pseudo-list li.hover-demo:hover { background: #ffe0e6; }
+  .pseudo-list li.striped:nth-child(odd) { background: #f5f5f5; }
+  .pseudo-list li.first-highlight:first-child { font-weight: 700; color: #e94560; }
+
+  /* Flex 通用元素 */
+  .flex-item {
+    background: #3498db;
+    color: #fff;
+    text-align: center;
+    padding: 16px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 36px;
+    transition: all .3s;
+  }
+  .flex-item:nth-child(odd) { background: #2ecc71; }
+  .flex-item:nth-child(3n) { background: #9b59b6; }
+
+  /* Flex 容器 */
+  .flex-container {
+    display: flex;
+    background: #eee;
+    border-radius: 10px;
+    padding: 12px;
+    min-height: 100px;
+    border: 2px dashed #ccc;
+    transition: all .3s;
+  }
+  .flex-container.labeled {
+    border: 2px solid #e94560;
+    position: relative;
+  }
+  .flex-container.labeled::after {
+    content: "← 这是 Flex 容器";
+    position: absolute;
+    top: -28px;
+    left: 0;
+    font-size: 12px;
+    color: #e94560;
+    font-weight: 600;
+  }
+  .flex-item.labeled {
+    position: relative;
+  }
+  .flex-item.labeled::after {
+    content: "项目";
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #888;
+    white-space: nowrap;
+  }
+
+  /* 指标箭头 */
+  .axis-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #e94560;
+    margin: 4px 0;
+  }
+  .axis-indicator .arrow { font-size: 18px; }
+
+  /* 代码块 */
+  .code-snip {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+    font-size: 13px;
+    overflow-x: auto;
+    margin: 8px 0;
+    line-height: 1.6;
+  }
+  .code-snip .kw { color: #cba6f7; }
+  .code-snip .prop { color: #89b4fa; }
+  .code-snip .val { color: #a6e3a1; }
+  .code-snip .cmt { color: #6c7086; }
+
+  /* 优先级表格 */
+  .spec-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px; }
+  .spec-table th, .spec-table td { padding: 10px 14px; border: 1px solid #e0e0e0; text-align: left; }
+  .spec-table th { background: #1a1a2e; color: #fff; font-weight: 600; }
+  .spec-table tr:nth-child(even) { background: #fafafa; }
+  .spec-table .rank { text-align: center; font-weight: 700; }
+
+  /* 伪元素 demo */
+  .pseudo-el-demo { position: relative; padding: 16px; background: #fff; border-radius: 8px; font-size: 16px; text-align: center; }
+  .pseudo-el-demo.with-before::before {
+    content: "「前置」";
+    color: #e94560;
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .pseudo-el-demo.with-after::after {
+    content: "「后置」";
+    color: #2ecc71;
+    font-weight: 700;
+    margin-left: 6px;
+  }
+
+  /* 优先级对比demo */
+  .spec-demo-box {
+    width: 100px; height: 100px;
+    background: #3498db;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    text-align: center;
+    margin: 0 auto;
+    transition: all .3s;
+  }
+  /* 0,0,1 */
+  .spec-demo-box { background: #3498db; }
+  /* 0,1,0 */
+  .spec-demo-box.box-special { background: #e94560; }
+  /* 1,0,0 */
+  #spec-id-demo { background: #2ecc71; }
+
+  /* Flexbox 交互式控件区 */
+  .flex-playground .flex-container { min-height: 140px; }
+
+  /* 响应式 */
+  @media (max-width: 640px) {
+    .topbar { padding: 10px 14px; }
+    .topbar nav { margin-left: 0; }
+    .section { padding: 20px 12px; }
+    .card { padding: 16px; }
+    .demo-area { padding: 10px; }
+  }
+
+  /* 提示框 */
+  .tip {
+    background: #e8f5e9;
+    border-left: 4px solid #4caf50;
+    padding: 10px 14px;
+    margin: 10px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+  }
+  .tip::before { content: "💡 "; }
+</style>
+</head>
+<body>
+
+<!-- ========== 顶部导航 ========== -->
+<div class="topbar">
+  <h1>CSS 选择器 & Flex 布局</h1>
+  <span class="subtitle">—— 说人话，能跑通，随便问</span>
+  <nav>
+    <a href="#selectors">选择器</a>
+    <a href="#flexbox">Flex 布局</a>
+  </nav>
+</div>
+
+<!-- ================================================================ -->
+<!--                    第一部分：CSS 选择器                            -->
+<!-- ================================================================ -->
+<div class="section" id="selectors">
+  <h2>第一部分：CSS 选择器</h2>
+  <p style="margin-top:12px; color:#666; font-size:14px;">
+    <strong>一句话解释：</strong>选择器就是告诉浏览器"我要给<em>哪些</em>元素加样式"。选得准不准，全靠选择器。
+  </p>
+
+  <!-- 1. 基础选择器 -->
+  <div class="card">
+    <h3>1. 基础选择器 — 三种最常见的"点名"方式</h3>
+    <div class="explain">
+      <strong>大白话：</strong>
+      元素选择器 = 喊"所有姓张的站出来"（按标签名）；<br>
+      类选择器 = 喊"戴红帽子的举手"（按 class，可多人共享）；<br>
+      ID 选择器 = 喊"工号 007 出列"（按 id，整个页面唯一）。
+    </div>
+    <div class="code-snip">
+<span class="cmt">/* 元素选择器：选所有 &lt;p&gt; */</span>
+<span class="kw">p</span> { <span class="prop">color</span>: <span class="val">blue</span>; }
+
+<span class="cmt">/* 类选择器：选所有 class="card" */</span>
+<span class="kw">.card</span> { <span class="prop">border-radius</span>: <span class="val">10px</span>; }
+
+<span class="cmt">/* ID 选择器：选 id="title"（只有那一个） */</span>
+<span class="kw">#title</span> { <span class="prop">font-size</span>: <span class="val">24px</span>; }
+    </div>
+    <div class="demo-area">
+      <div class="controls">
+        <button onclick="toggleBasic('element')" id="btn-element">点亮元素选择器</button>
+        <button onclick="toggleBasic('class')" id="btn-class">点亮类选择器</button>
+        <button onclick="toggleBasic('id')" id="btn-id">点亮 ID 选择器</button>
+      </div>
+      <div id="basic-demo">
+        <div class="sel-box" data-type="element">A</div>
+        <div class="sel-box" data-type="element">B</div>
+        <div class="sel-box my-class" data-type="class">C</div>
+        <div class="sel-box my-class" data-type="class">D</div>
+        <div class="sel-box" data-type="element">E</div>
+        <div class="sel-box" id="unique-one" data-type="id">F</div>
+        <div class="sel-box" data-type="element">G</div>
+      </div>
+      <p style="font-size:12px; color:#888; margin-top:8px;">
+        点击按钮看效果：元素选择器选中 A,B,E,G；类选择器选中 C,D；ID 选择器只选中 F
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. 组合选择器 -->
+  <div class="card">
+    <h3>2. 组合选择器 — 按"关系"找人</h3>
+    <div class="explain">
+      <strong>大白话：</strong>
+      后代（空格）= "你部门所有人（不管几级下属）"；<br>
+      子代（>）= "只算你的直属下级"；<br>
+      相邻兄弟（+）= "紧挨着你的下一个同事"；<br>
+      通用兄弟（~）= "你后面所有同级同事"。
+    </div>
+    <div class="code-snip">
+<span class="cmt">/* 后代：div 里面所有 span（不管隔几层） */</span>
+<span class="kw">div span</span> { <span class="prop">color</span>: <span class="val">red</span>; }
+
+<span class="cmt">/* 子代：div 直属儿子 span */</span>
+<span class="kw">div > span</span> { <span class="prop">color</span>: <span class="val">green</span>; }
+
+<span class="cmt">/* 紧挨着的下一个兄弟 */</span>
+<span class="kw">h2 + p</span> { <span class="prop">font-weight</span>: <span class="val">bold</span>; }
+    </div>
+    <div class="demo-area">
+      <div class="controls">
+        <button onclick="toggleCombinator('descendant')" id="btn-desc">点亮后代 (空格)</button>
+        <button onclick="toggleCombinator('child')" id="btn-child">点亮子代 (>)</button>
+      </div>
+      <div id="combinator-demo" style="padding:12px; background:#fff; border-radius:6px; font-size:14px;">
+        <div style="border:1px solid #ddd; padding:10px;" class="combo-outer">
+          外层 div
+          <span style="display:block; border:1px solid #3498db; padding:6px; margin:4px;" class="combo-direct">直属 span →</span>
+          <div style="border:1px solid #ddd; padding:8px; margin:4px; background:#f9f9f9;">
+            &nbsp;&nbsp;内层 div
+            <span style="display:block; border:1px solid #e94560; padding:6px; margin:4px;" class="combo-nested">孙子 span →</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px; color:#888; margin-top:8px;">
+        后代选择器会同时命中"直属 span"和"孙子 span"；子代选择器只命中"直属 span"
+      </p>
+    </div>
+  </div>
+
+  <!-- 3. 属性选择器 -->
+  <div class="card">
+    <h3>3. 属性选择器 — 按"特征"筛选</h3>
+    <div class="explain">
+      <strong>大白话：</strong>就像你说"把戴眼镜的人叫出来"（有某属性）、"把穿红色衣服的找出来"（属性等于某值）。
+      特别适合给不同类型的 input 加样式。
+    </div>
+    <div class="code-snip">
+<span class="cmt">/* 有 placeholder 属性的 input */</span>
+<span class="kw">input[placeholder]</span> { <span class="prop">border-color</span>: <span class="val">blue</span>; }
+
+<span class="cmt">/* type="email" 的 input */</span>
+<span class="kw">input[type="email"]</span> { <span class="prop">background</span>: <span class="val">#fff0f3</span>; }
+    </div>
+    <div class="demo-area">
+      <div class="attr-demo" id="attr-demo">
+        <input type="text" placeholder="有 placeholder">
+        <input type="email" placeholder="email@example.com">
+        <input type="text">
+        <input type="password" placeholder="密码">
+      </div>
+      <p style="font-size:12px; color:#888; margin-top:8px;">
+        input[placeholder] 命中第 1、2、4 个；input[type="email"] 只命中第 2 个
+      </p>
+    </div>
+  </div>
+
+  <!-- 4. 伪类选择器 -->
+  <div class="card">
+    <h3>4. 伪类选择器 — 按"状态"或"位置"选</h3>
+    <div class="explain">
+      <strong>大白话：</strong>伪类不是写死在 HTML 里的 class，而是浏览器根据<strong>状态</strong>（鼠标悬停、是否第一个、第几个）动态算出来的。
+    </div>
+    <div class="code-snip">
+<span class="cmt">/* 鼠标悬停 */</span>
+<span class="kw">li:hover</span> { <span class="prop">background</span>: <span class="val">pink</span>; }
+
+<span class="cmt">/* 第一个子元素 */</span>
+<span class="kw">li:first-child</span> { <span class="prop">color</span>: <span class="val">red</span>; }
+
+<span class="cmt">/* 奇数行（隔行变色） */</span>
+<span class="kw">li:nth-child(odd)</span> { <span class="prop">background</span>: <span class="val">#f5f5f5</span>; }
+    </div>
+    <div class="demo-area">
+      <p style="font-size:12px; color:#888; margin-bottom:6px;">把鼠标移到下面列表试试：</p>
+      <ul class="pseudo-list" style="border:1px solid #eee; border-radius:6px; overflow:hidden;">
+        <li class="hover-demo striped first-highlight">第 1 行 — 加粗变红（first-child）</li>
+        <li class="hover-demo striped">第 2 行 — 鼠标放上来会变粉（hover）</li>
+        <li class="hover-demo striped">第 3 行 — 奇数行有浅灰底（nth-child odd）</li>
+        <li class="hover-demo striped">第 4 行</li>
+        <li class="hover-demo striped">第 5 行</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 5. 伪元素 -->
+  <div class="card">
+    <h3>5. 伪元素 — 凭空"造"出内容</h3>
+    <div class="explain">
+      <strong>大白话：</strong>伪元素可以在不写 HTML 的情况下，用 CSS 在元素前后"插"东西。
+      ::before 插在前面，::after 插在后面。必须配合 <code>content</code> 属性使用。
+      常用于加装饰图标、清除浮动、自定义列表符号等。
+    </div>
+    <div class="demo-area">
+      <div class="controls">
+        <button onclick="togglePseudoEl()" id="btn-pseudo">切换伪元素开关</button>
+      </div>
+      <div class="pseudo-el-demo" id="pseudo-el-demo">
+        这是一段普通文字
+      </div>
+      <p style="font-size:12px; color:#888; margin-top:8px;">
+        点按钮后，CSS 会在这段文字前后各插入「前置」和「后置」——HTML 里并没有这些字
+      </p>
+    </div>
+  </div>
+
+  <!-- 6. 优先级 -->
+  <div class="card">
+    <h3>6. 选择器优先级（权重）— 谁说了算？</h3>
+    <div class="explain">
+      <strong>大白话：</strong>同一个元素被多个选择器"抢"，浏览器按一套记分规则来决定。<br>
+      记分方式：(ID数量, 类/属性/伪类数量, 元素/伪元素数量) → 像三位的数字<br>
+      <strong>口诀：</strong>ID 权重最高，类其次，标签最低。行内样式 > ID > 类 > 标签。!important 是核武器，慎用。
+    </div>
+    <table class="spec-table">
+      <tr><th>选择器</th><th>权重 (ID, 类, 元素)</th><th>比喻</th></tr>
+      <tr><td><code>*</code> (通配符)</td><td class="rank">(0,0,0)</td><td>小透明</td></tr>
+      <tr><td><code>div</code></td><td class="rank">(0,0,1)</td><td>普通士兵</td></tr>
+      <tr><td><code>.box</code></td><td class="rank">(0,1,0)</td><td>排长</td></tr>
+      <tr><td><code>div.box</code></td><td class="rank">(0,1,1)</td><td>排长 + 士兵</td></tr>
+      <tr><td><code>#app</code></td><td class="rank">(1,0,0)</td><td>将军</td></tr>
+      <tr><td><code>style="..."</code> 行内</td><td class="rank">(1,0,0,0)</td><td>元帅，压一切</td></tr>
+    </table>
+    <div class="demo-area" style="text-align:center;">
+      <p style="font-size:12px; color:#888; margin-bottom:8px;">
+        下面方块同时被三个选择器瞄准，但只有一个生效。猜猜什么颜色？
+      </p>
+      <div class="spec-demo-box box-special" id="spec-id-demo">我会是什么颜色？</div>
+      <p style="font-size:12px; color:#888; margin-top:8px;">
+        答案：绿色。因为 #spec-id-demo 权重 (1,0,0) > .box-special (0,1,0) > div (0,0,1)
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!--                    第二部分：Flex 布局                             -->
+<!-- ================================================================ -->
+<div class="section" id="flexbox">
+  <h2>第二部分：Flex 布局</h2>
+  <p style="margin-top:12px; color:#666; font-size:14px;">
+    <strong>一句话解释：</strong>Flex 就是让一堆元素<em>在一行（或一列）里自动排好</em>，对齐、间距、换行全部交给 CSS 处理，不需要手动算位置。
+  </p>
+
+  <!-- 1. 基本概念 -->
+  <div class="card">
+    <h3>1. 核心概念：容器 vs 项目</h3>
+    <div class="explain">
+      <strong>大白话：</strong>给父元素加上 <code>display: flex</code>，它就变成了一个"弹性容器"。
+      里面的<strong>直接子元素</strong>自动变成"弹性项目"，开始在容器里按规则排列。<br>
+      <strong>关键：</strong>flex 只管理<em>直接儿子</em>，不管孙子。
+    </div>
+    <div class="code-snip">
+<span class="cmt">/* 父元素加上这一行，子元素就自动排成一行 */</span>
+<span class="kw">.container</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+}
+    </div>
+    <div class="demo-area">
+      <div class="flex-container labeled">
+        <div class="flex-item labeled" style="padding:20px 24px;">项目 1</div>
+        <div class="flex-item labeled" style="padding:20px 24px;">项目 2</div>
+        <div class="flex-item labeled" style="padding:20px 24px;">项目 3</div>
+      </div>
+      <p style="font-size:12px; color:#888; margin-top:28px;">
+        外层红框 = flex 容器；每个蓝/绿/紫块 = flex 项目。容器和项目各有自己的一套属性。
+      </p>
+    </div>
+  </div>
+
+  <!-- 主轴和交叉轴 -->
+  <div class="card">
+    <h3>2. 主轴和交叉轴 — 理解 flex 的关键</h3>
+    <div class="explain">
+      <strong>大白话：</strong>flex 布局有两条轴线——<strong>主轴</strong>（项目排列的方向）和<strong>交叉轴</strong>（垂直于主轴）。<br>
+      默认主轴是<strong>水平从左到右</strong>，所以项目默认排成一行。<br>
+      <code>justify-content</code> 管主轴方向的对齐，<code>align-items</code> 管交叉轴方向的对齐。
+    </div>
+    <div style="text-align:center; padding:16px; background:#fff; border-radius:8px; margin-top:8px;">
+      <div style="display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div style="font-weight:700; color:#e94560;">←——— 主轴（默认水平） ———→</div>
+          <div style="width:260px; height:100px; border:2px solid #e94560; border-radius:8px; margin:8px auto; display:flex; align-items:center; justify-content:center; color:#e94560; font-size:13px;">justify-content 管这个方向</div>
+        </div>
+        <div style="font-size:24px; color:#888;">×</div>
+        <div style="text-align:center;">
+          <div style="font-weight:700; color:#2ecc71; writing-mode:vertical-lr;">交叉轴</div>
+          <div style="width:100px; height:100px; border:2px solid #2ecc71; border-radius:8px; margin:8px auto; display:flex; align-items:center; justify-content:center; color:#2ecc71; font-size:13px;">align-items 管这个方向</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. flex-direction 交互式 -->
+  <div class="card">
+    <h3>3. flex-direction — 主轴方向</h3>
+    <div class="explain">
+      <strong>大白话：</strong>决定项目从左到右排、从右到左排、从上到下排、还是从下到上排。<br>
+      改了方向后，主轴和交叉轴也会跟着转。
+    </div>
+    <div class="demo-area flex-playground">
+      <div class="controls">
+        <select id="flex-direction-select" onchange="updateFlexDemo()">
+          <option value="row">row（默认：左→右）</option>
+          <option value="row-reverse">row-reverse（右→左）</option>
+          <option value="column">column（上→下）</option>
+          <option value="column-reverse">column-reverse（下→上）</option>
+        </select>
+      </div>
+      <div class="flex-container" id="flex-demo-container" style="flex-direction:row;">
+        <div class="flex-item">1</div>
+        <div class="flex-item">2</div>
+        <div class="flex-item">3</div>
+        <div class="flex-item">4</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. justify-content -->
+  <div class="card">
+    <h3>4. justify-content — 主轴上的对齐</h3>
+    <div class="explain">
+      <strong>大白话：</strong>项目在主轴方向上怎么分布？<br>
+      左对齐、右对齐、居中、两端贴边中间平分、每个项目周围平分……全由它管。
+    </div>
+    <div class="demo-area flex-playground">
+      <div class="controls">
+        <select id="justify-select" onchange="updateFlexDemo()">
+          <option value="flex-start">flex-start（开头对齐）</option>
+          <option value="flex-end">flex-end（末尾对齐）</option>
+          <option value="center">center（居中）</option>
+          <option value="space-between">space-between（两端贴边，中间均分）</option>
+          <option value="space-around">space-around（每个项目两侧均分）</option>
+          <option value="space-evenly">space-evenly（所有间距相等）</option>
+        </select>
+        <button onclick="resetFlexDemo()" style="margin-left:auto;">重置所有</button>
+      </div>
+      <div class="flex-container" id="flex-demo-container2" style="flex-direction:row; justify-content:flex-start;">
+        <div class="flex-item">1</div>
+        <div class="flex-item">2</div>
+        <div class="flex-item">3</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. align-items -->
+  <div class="card">
+    <h3>5. align-items — 交叉轴上的对齐</h3>
+    <div class="explain">
+      <strong>大白话：</strong>项目在交叉轴方向上怎么摆？顶部对齐、底部对齐、居中、还是拉伸填满？<br>
+      默认是 stretch（拉伸填满容器高度）。
+    </div>
+    <div class="demo-area flex-playground">
+      <div class="controls">
+        <select id="align-items-select" onchange="updateFlexDemo2()">
+          <option value="stretch">stretch（拉伸填满，默认）</option>
+          <option value="flex-start">flex-start（顶部对齐）</option>
+          <option value="flex-end">flex-end（底部对齐）</option>
+          <option value="center">center（垂直居中）</option>
+          <option value="baseline">baseline（文字基线对齐）</option>
+        </select>
+      </div>
+      <div class="flex-container" id="flex-demo-container3" style="flex-direction:row; align-items:stretch; min-height:160px;">
+        <div class="flex-item" style="padding-top:20px;">A</div>
+        <div class="flex-item" style="padding-top:40px; font-size:20px;">B</div>
+        <div class="flex-item" style="padding-top:10px;">C</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. flex-wrap 和 gap -->
+  <div class="card">
+    <h3>6. flex-wrap（换行）和 gap（间距）</h3>
+    <div class="explain">
+      <strong>大白话：</strong>默认 flex 不换行，所有项目挤在一行。加上 <code>flex-wrap: wrap</code> 后，放不下就自动换行。<br>
+      <code>gap</code> 就是项目之间的间距，不用再写麻烦的 margin 了。
+    </div>
+    <div class="demo-area flex-playground">
+      <div class="controls">
+        <button onclick="toggleWrap()" id="btn-wrap">flex-wrap: nowrap（当前）</button>
+        <select id="gap-select" onchange="updateGap()">
+          <option value="0">gap: 0</option>
+          <option value="8">gap: 8px</option>
+          <option value="16" selected>gap: 16px</option>
+          <option value="24">gap: 24px</option>
+        </select>
+      </div>
+      <div class="flex-container" id="flex-wrap-demo" style="flex-wrap:nowrap; gap:16px;">
+        <div class="flex-item">1</div>
+        <div class="flex-item">2</div>
+        <div class="flex-item">3</div>
+        <div class="flex-item">4</div>
+        <div class="flex-item">5</div>
+        <div class="flex-item">6</div>
+        <div class="flex-item">7</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. 项目属性：flex-grow, flex-shrink, flex-basis -->
+  <div class="card">
+    <h3>7. 项目属性：flex-grow / flex-shrink / flex-basis</h3>
+    <div class="explain">
+      <strong>大白话：</strong>
+      <code>flex-grow</code> = "有多贪"（剩余空间按比例瓜分，默认 0 不抢）；<br>
+      <code>flex-shrink</code> = "有多能忍"（空间不够时按比例缩，默认 1）；<br>
+      <code>flex-basis</code> = "初始大小"（项目起步多宽/多高，默认 auto）。<br>
+      <strong>常用简写：</strong><code>flex: 1</code> = flex-grow:1; flex-shrink:1; flex-basis:0（均分空间）。
+    </div>
+    <div class="demo-area flex-playground">
+      <div class="controls">
+        <button onclick="toggleGrow()" id="btn-grow">flex: 1（均分）</button>
+      </div>
+      <div class="flex-container" id="flex-grow-demo">
+        <div class="flex-item" id="grow-item-1">flex: 1</div>
+        <div class="flex-item" id="grow-item-2">flex: 2</div>
+        <div class="flex-item" id="grow-item-3">flex: 1</div>
+      </div>
+      <p style="font-size:12px; color:#888; margin-top:6px;">
+        点按钮后三个项目按 1:2:1 分宽度——中间那个是两倍宽
+      </p>
+    </div>
+  </div>
+
+  <!-- 8. align-self 和 order -->
+  <div class="card">
+    <h3>8. align-self 和 order — 单个项目"搞特殊"</h3>
+    <div class="explain">
+      <strong>大白话：</strong>
+      <code>align-self</code> 让某个项目不跟大伙对齐，自己单独决定在交叉轴上的位置；<br>
+      <code>order</code> 改项目的排列顺序（数字越小越靠前，默认 0），HTML 顺序不变，视觉顺序变了。
+    </div>
+    <div class="demo-area flex-playground">
+      <div class="flex-container" style="align-items:center; min-height:140px;">
+        <div class="flex-item" style="order:3;">order: 3</div>
+        <div class="flex-item" style="order:1; align-self:flex-start; background:#e94560;">order:1 + 顶部</div>
+        <div class="flex-item" style="order:2; align-self:flex-end; background:#e94560;">order:2 + 底部</div>
+      </div>
+      <p style="font-size:12px; color:#888; margin-top:8px;">
+        虽然 HTML 里写成 1-2-3 的顺序，但视觉上被 order 重排成了 中间-右边-左边。<br>
+        红色两个分别用 align-self 把自己钉在顶部和底部。
+      </p>
+    </div>
+  </div>
+
+  <!-- 9. 综合实战 -->
+  <div class="card">
+    <h3>9. 实战组合：一个经典导航栏</h3>
+    <div class="explain">
+      <strong>下面就是一个用 flex 做的导航栏：</strong>logo 在左，菜单在右，水平居中，间距自动。两行 CSS 搞定。
+    </div>
+    <div class="demo-area">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 20px; background:#1a1a2e; border-radius:8px; color:#fff;">
+        <div style="font-weight:700; font-size:18px;">MyLogo</div>
+        <div style="display:flex; gap:20px;">
+          <span>首页</span>
+          <span>产品</span>
+          <span>关于</span>
+          <span>联系</span>
+        </div>
+      </div>
+      <div class="code-snip" style="margin-top:10px;">
+<span class="kw">.navbar</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  <span class="prop">align-items</span>: <span class="val">center</span>;          <span class="cmt">/* 垂直居中 */</span>
+  <span class="prop">justify-content</span>: <span class="val">space-between</span>;  <span class="cmt">/* 两端贴边 */</span>
+}
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Flex 速查表 -->
+  <div class="card">
+    <h3>10. Flex 属性速查表</h3>
+    <table class="spec-table">
+      <tr><th>属性</th><th>作用在谁身上</th><th>管什么</th><th>常用值</th></tr>
+      <tr><td><code>display: flex</code></td><td>容器</td><td>开启 flex 模式</td><td>flex</td></tr>
+      <tr><td><code>flex-direction</code></td><td>容器</td><td>主轴方向</td><td>row / column</td></tr>
+      <tr><td><code>justify-content</code></td><td>容器</td><td>主轴对齐</td><td>center / space-between</td></tr>
+      <tr><td><code>align-items</code></td><td>容器</td><td>交叉轴对齐</td><td>center / stretch</td></tr>
+      <tr><td><code>flex-wrap</code></td><td>容器</td><td>是否换行</td><td>wrap / nowrap</td></tr>
+      <tr><td><code>gap</code></td><td>容器</td><td>项目间距</td><td>16px / 20px</td></tr>
+      <tr><td><code>flex: 1</code></td><td>项目</td><td>瓜分剩余空间</td><td>1 / 2 / none</td></tr>
+      <tr><td><code>align-self</code></td><td>项目</td><td>单独控制交叉轴</td><td>flex-start / center</td></tr>
+      <tr><td><code>order</code></td><td>项目</td><td>排序</td><td>0 / 1 / -1</td></tr>
+    </table>
+  </div>
+</div>
+
+<div style="text-align:center; padding:40px 20px; color:#888; font-size:13px;">
+  有看不懂的地方直接在对话里问我，我换个姿势再讲一遍。
+</div>
+
+<script>
+// ==================== 选择器交互 ====================
+
+// 1. 基础选择器
+function toggleBasic(type) {
+  const all = document.querySelectorAll('#basic-demo .sel-box');
+  all.forEach(el => el.classList.remove('highlight'));
+
+  let targets;
+  if (type === 'element') {
+    targets = document.querySelectorAll('#basic-demo .sel-box[data-type="element"]');
+  } else if (type === 'class') {
+    targets = document.querySelectorAll('#basic-demo .sel-box[data-type="class"]');
+  } else if (type === 'id') {
+    targets = document.querySelectorAll('#basic-demo .sel-box[data-type="id"]');
+  }
+  targets.forEach(el => el.classList.add('highlight'));
+
+  document.querySelectorAll('#basic-demo + .controls button').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + type).classList.add('active');
+}
+
+// 2. 组合选择器
+function toggleCombinator(type) {
+  document.querySelectorAll('#combinator-demo span').forEach(el => {
+    el.style.background = '';
+    el.style.color = '';
+    el.style.fontWeight = '';
+  });
+
+  if (type === 'descendant') {
+    document.querySelectorAll('#combinator-demo .combo-outer span').forEach(el => {
+      el.style.background = '#ffe0e6';
+      el.style.color = '#e94560';
+      el.style.fontWeight = '700';
+    });
+  } else if (type === 'child') {
+    document.querySelectorAll('#combinator-demo .combo-outer > span').forEach(el => {
+      el.style.background = '#d4edda';
+      el.style.color = '#155724';
+      el.style.fontWeight = '700';
+    });
+  }
+
+  document.getElementById('btn-desc').classList.toggle('active', type === 'descendant');
+  document.getElementById('btn-child').classList.toggle('active', type === 'child');
+}
+
+// 3. 属性选择器（内置效果，始终生效）
+// 给属性选择器 demo 加默认高亮
+(function() {
+  var inputs = document.querySelectorAll('#attr-demo input[placeholder]');
+  inputs.forEach(function(inp) { inp.classList.add('highlight-attr'); });
+})();
+
+// 5. 伪元素
+function togglePseudoEl() {
+  var el = document.getElementById('pseudo-el-demo');
+  var btn = document.getElementById('btn-pseudo');
+  var hasBefore = el.classList.contains('with-before');
+  if (hasBefore) {
+    el.classList.remove('with-before', 'with-after');
+    btn.textContent = '打开伪元素';
+  } else {
+    el.classList.add('with-before', 'with-after');
+    btn.textContent = '关闭伪元素';
+  }
+}
+
+// ==================== Flex 交互 ====================
+
+function updateFlexDemo() {
+  var dir = document.getElementById('flex-direction-select').value;
+  var just = document.getElementById('justify-select').value;
+  var container = document.getElementById('flex-demo-container');
+  container.style.flexDirection = dir;
+  container.style.justifyContent = just;
+
+  var container2 = document.getElementById('flex-demo-container2');
+  container2.style.justifyContent = just;
+}
+
+function updateFlexDemo2() {
+  var val = document.getElementById('align-items-select').value;
+  document.getElementById('flex-demo-container3').style.alignItems = val;
+}
+
+function resetFlexDemo() {
+  document.getElementById('flex-direction-select').value = 'row';
+  document.getElementById('justify-select').value = 'flex-start';
+  document.getElementById('align-items-select').value = 'stretch';
+  document.getElementById('flex-demo-container').style.flexDirection = 'row';
+  document.getElementById('flex-demo-container').style.justifyContent = 'flex-start';
+  document.getElementById('flex-demo-container2').style.justifyContent = 'flex-start';
+  document.getElementById('flex-demo-container3').style.alignItems = 'stretch';
+}
+
+function toggleWrap() {
+  var container = document.getElementById('flex-wrap-demo');
+  var btn = document.getElementById('btn-wrap');
+  if (container.style.flexWrap === 'wrap') {
+    container.style.flexWrap = 'nowrap';
+    btn.textContent = 'flex-wrap: nowrap（当前）';
+    btn.classList.remove('active');
+  } else {
+    container.style.flexWrap = 'wrap';
+    btn.textContent = 'flex-wrap: wrap（当前）';
+    btn.classList.add('active');
+  }
+}
+
+function updateGap() {
+  var val = document.getElementById('gap-select').value;
+  document.getElementById('flex-wrap-demo').style.gap = val + 'px';
+}
+
+function toggleGrow() {
+  var item1 = document.getElementById('grow-item-1');
+  var item2 = document.getElementById('grow-item-2');
+  var item3 = document.getElementById('grow-item-3');
+  var btn = document.getElementById('btn-grow');
+
+  if (item1.style.flex === '1 1 0%' || item1.style.flex === '1') {
+    item1.style.flex = '';
+    item2.style.flex = '';
+    item3.style.flex = '';
+    item1.textContent = '默认';
+    item2.textContent = '默认';
+    item3.textContent = '默认';
+    btn.textContent = 'flex: 1（均分）';
+    btn.classList.remove('active');
+  } else {
+    item1.style.flex = '1';
+    item2.style.flex = '2';
+    item3.style.flex = '1';
+    item1.textContent = 'flex: 1';
+    item2.textContent = 'flex: 2';
+    item3.textContent = 'flex: 1';
+    btn.textContent = '重置';
+    btn.classList.add('active');
+  }
+}
+</script>
+
+</body>
+</html>

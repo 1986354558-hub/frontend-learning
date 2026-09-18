@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第7天：综合实战 —— 待办事项</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "PingFang SC","Microsoft YaHei",sans-serif;
+      background: #f0f2f5; color: #333; line-height: 1.6;
+      display: flex; justify-content: center; padding: 40px 16px;
+    }
+    .app {
+      width: 100%; max-width: 480px;
+      background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      padding: 32px 28px;
+    }
+    h1 { font-size: 24px; color: #4a90d9; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; color: #999; margin-bottom: 24px; }
+    .input-row { display: flex; gap: 8px; margin-bottom: 20px; }
+    .input-row input {
+      flex: 1; padding: 10px 14px; border: 2px solid #e0e0e0;
+      border-radius: 8px; font-size: 15px; outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-row input:focus { border-color: #4a90d9; }
+    .input-row button {
+      background: #4a90d9; color: #fff; border: none;
+      padding: 10px 20px; border-radius: 8px; font-size: 15px;
+      cursor: pointer; white-space: nowrap; transition: background 0.2s;
+    }
+    .input-row button:hover { background: #357abd; }
+    .stats {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px; font-size: 13px; color: #888;
+    }
+    .stats strong { color: #4a90d9; }
+    .todo-list { list-style: none; }
+    .todo-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 14px; border-radius: 8px; margin-bottom: 6px;
+      background: #f8f9fa; transition: background 0.2s;
+    }
+    .todo-item:hover { background: #eef1f5; }
+    .todo-check {
+      width: 20px; height: 20px; border: 2px solid #ccc;
+      border-radius: 50%; cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .todo-check.done { background: #4a90d9; border-color: #4a90d9; }
+    .todo-check.done::after {
+      content: "\2713"; color: #fff; font-size: 12px; font-weight: 700;
+    }
+    .todo-text { flex: 1; font-size: 15px; word-break: break-all; }
+    .todo-text.completed { text-decoration: line-through; color: #bbb; }
+    .todo-del {
+      background: none; border: none; color: #ccc; font-size: 18px;
+      cursor: pointer; padding: 4px 8px; border-radius: 4px;
+      transition: color 0.2s, background 0.2s; line-height: 1;
+    }
+    .todo-del:hover { color: #e74c3c; background: #fde8e8; }
+    .empty { text-align: center; color: #ccc; padding: 40px 0; font-size: 15px; }
+    .nav { margin-top: 32px; text-align: center; }
+    .nav a {
+      display: inline-block; background: #f0f2f5; color: #666;
+      padding: 8px 24px; border-radius: 8px; text-decoration: none;
+      font-size: 14px; margin: 0 6px; transition: background 0.2s;
+    }
+    .nav a:hover { background: #e0e0e0; }
+    .explain {
+      margin-top: 28px; padding: 16px; background: #fefdf6;
+      border-left: 3px solid #ffc107; border-radius: 4px;
+      font-size: 13px; color: #856404; line-height: 1.8;
+    }
+    .explain strong { color: #664d03; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>📋 待办事项</h1>
+    <p class="subtitle">第 7 天综合实战 —— 综合 HTML、CSS、JS 三大件</p>
+    <div class="input-row">
+      <input id="todoInput" type="text" placeholder="输入要做的事情……" maxlength="50">
+      <button id="addBtn">添加</button>
+    </div>
+    <div class="stats">
+      <span>已完成 <strong id="doneCount">0</strong> / <strong id="totalCount">0</strong></span>
+      <button id="clearDoneBtn" style="background:none;border:none;color:#999;cursor:pointer;font-size:12px;">清除已完成</button>
+    </div>
+    <ul class="todo-list" id="todoList">
+      <li class="empty">还没有待办事项，添加一个吧 ✨</li>
+    </ul>
+    <div class="explain">
+      <strong>🔍 这个页面用到了前 6 天的哪些知识？</strong><br>
+      · HTML 标签：h1、p、input、button、ul、li<br>
+      · CSS 样式：颜色、圆角、间距、过渡动画<br>
+      · Flexbox：输入行、列表项、统计栏的排版<br>
+      · JS 变量/函数：存放待办数据、封装操作逻辑<br>
+      · DOM 操作：创建元素、修改文字、添加/删除节点<br>
+      · 事件处理：点击添加、勾选完成、点击删除、回车提交
+    </div>
+    <div class="nav">
+      <a href="day6.html">← 第 6 天</a>
+      <a href="index.html">返回目录</a>
+    </div>
+  </div>
+  <script>
+    var todoInput = document.getElementById("todoInput");
+    var addBtn    = document.getElementById("addBtn");
+    var todoList  = document.getElementById("todoList");
+    var doneCount = document.getElementById("doneCount");
+    var totalCount= document.getElementById("totalCount");
+    var todoCount = 0;
+
+    addBtn.addEventListener("click", addTodo);
+    todoInput.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") { addTodo(); }
+    });
+    document.getElementById("clearDoneBtn").addEventListener("click", clearDone);
+
+    function addTodo() {
+      var text = todoInput.value.trim();
+      if (text === "") { todoInput.focus(); return; }
+      todoCount++;
+      var li = document.createElement("li");
+      li.className = "todo-item";
+      var checkDiv = document.createElement("div");
+      checkDiv.className = "todo-check";
+      var textSpan = document.createElement("span");
+      textSpan.className = "todo-text";
+      textSpan.textContent = text;
+      checkDiv.addEventListener("click", function() {
+        checkDiv.classList.toggle("done");
+        textSpan.classList.toggle("completed");
+        li.style.background = "#e8f5e9";
+        setTimeout(function() { li.style.background = ""; }, 300);
+        updateStats();
+      });
+      var delBtn = document.createElement("button");
+      delBtn.className = "todo-del";
+      delBtn.textContent = "\u00d7";
+      delBtn.title = "删除";
+      delBtn.addEventListener("click", function() {
+        li.remove(); updateStats(); checkEmpty();
+      });
+      li.appendChild(checkDiv);
+      li.appendChild(textSpan);
+      li.appendChild(delBtn);
+      todoList.appendChild(li);
+      todoInput.value = "";
+      todoInput.focus();
+      updateStats();
+      checkEmpty();
+    }
+
+    function clearDone() {
+      var doneItems = document.querySelectorAll(".todo-check.done");
+      for (var i = 0; i < doneItems.length; i++) {
+        doneItems[i].parentElement.remove();
+      }
+      updateStats();
+      checkEmpty();
+    }
+
+    function updateStats() {
+      var allItems = document.querySelectorAll(".todo-item");
+      var doneItems = document.querySelectorAll(".todo-check.done");
+      totalCount.textContent = allItems.length;
+      doneCount.textContent = doneItems.length;
+    }
+
+    function checkEmpty() {
+      var allItems = document.querySelectorAll(".todo-item");
+      var emptyMsg = document.querySelector(".empty");
+      if (allItems.length === 0) {
+        if (!emptyMsg) {
+          var li = document.createElement("li");
+          li.className = "empty";
+          li.textContent = "还没有待办事项，添加一个吧 ✨";
+          todoList.appendChild(li);
+        }
+      } else {
+        if (emptyMsg) { emptyMsg.remove(); }
+      }
+    }
+  </script>
+</body>
+</html>

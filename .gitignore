@@ -1,0 +1,11 @@
+# 截图（非网站内容）
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# 系统/编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

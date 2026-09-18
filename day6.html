@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>第6天：事件处理</title>
+  <style>
+    body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; max-width:720px; margin:0 auto; padding:32px 20px; background:#fafaf8; color:#333; line-height:1.9; }
+    h1 { color:#4a90d9; }
+    h2 { color:#555; border-bottom:2px solid #eee; padding-bottom:8px; }
+    .code-box { background:#2d2d2d; color:#e6e6e6; padding:16px; border-radius:8px; font-family:monospace; font-size:14px; overflow-x:auto; white-space:pre; line-height:1.7; }
+    .demo { background:#fff; border:1px solid #e0e0e0; border-radius:8px; padding:20px; margin-top:12px; }
+    .demo-label { font-size:12px; color:#999; letter-spacing:2px; margin-bottom:8px; }
+    .nav { margin-top:48px; text-align:center; }
+    .nav a { display:inline-block; background:#4a90d9; color:#fff; padding:10px 28px; border-radius:8px; text-decoration:none; font-size:15px; margin:0 6px; }
+    .nav a:hover { background:#357abd; }
+    button { background:#4a90d9; color:#fff; border:none; padding:8px 20px; border-radius:6px; font-size:14px; cursor:pointer; margin:6px 6px 6px 0; }
+    button:hover { background:#357abd; }
+    input { padding:8px 12px; border:1px solid #ccc; border-radius:6px; font-size:14px; margin:4px; }
+    .counter-display { font-size:32px; font-weight:700; color:#4a90d9; margin:0 16px; display:inline-block; min-width:50px; text-align:center; }
+    .hover-box { display:inline-block; padding:12px 24px; border:2px solid #ccc; border-radius:8px; cursor:pointer; transition:background 0.2s, border-color 0.2s; user-select:none; }
+    .live-preview { padding:12px; background:#f5f5f5; border-radius:6px; min-height:30px; margin-top:8px; font-size:16px; color:#666; }
+  </style>
+</head>
+<body>
+  <h1>第 6 天：事件处理 —— 让网页"活"起来</h1>
+
+  <!-- ============================================================
+  "事件"就是用户在网页上的操作：点击、输入、移动鼠标、按键……
+  JS 可以"监听"这些事件，在事件发生时自动执行你指定的代码。
+
+  核心方法：
+    element.addEventListener("事件名", 要执行的函数)
+
+  常见事件：
+    click      → 鼠标点击
+    input      → 输入框内容变化（每输入一个字就触发）
+    mouseenter → 鼠标移入
+    mouseleave → 鼠标移出
+    submit     → 表单提交
+  ============================================================ -->
+
+  <h2>一、addEventListener 的基本用法</h2>
+  <p>给按钮绑定一个点击事件：</p>
+  <div class="code-box">var btn = document.getElementById("myBtn");
+btn.addEventListener("click", function() {
+  alert("按钮被点击了！");    // alert 弹出提示框
+});</div>
+
+  <h2>二、click 事件 —— 计数器</h2>
+  <p>最常用的事件，按钮点击时触发。</p>
+
+  <h2>三、input 事件 —— 实时显示输入</h2>
+  <p>输入框里每打一个字就会触发，适合做搜索建议、字数统计等。</p>
+
+  <h2>四、mouseenter / mouseleave —— 悬停效果</h2>
+  <p>鼠标移入和移出时触发，比 CSS 的 :hover 更灵活。</p>
+
+  <!-- ==================== 交互演示区 ==================== -->
+  <h2>⬇ 试试这些交互</h2>
+
+  <div class="demo">
+    <div class="demo-label">▼ 演示 1：点击计数器</div>
+    <button id="btnMinus">−</button>
+    <span class="counter-display" id="counter">0</span>
+    <button id="btnPlus">+</button>
+    <button id="btnReset" style="margin-left:12px;">重置</button>
+
+    <div class="demo-label" style="margin-top:20px;">▼ 演示 2：实时输入预览</div>
+    <input id="liveInput" type="text" placeholder="在这里打字……" style="width:280px;">
+    <div class="live-preview" id="livePreview">你输入的内容会实时出现在这里</div>
+
+    <div class="demo-label" style="margin-top:20px;">▼ 演示 3：悬停变色</div>
+    <div class="hover-box" id="hoverBox">把鼠标移到我上面</div>
+    <p style="font-size:13px;color:#888;">（使用 JS 事件而非 CSS :hover，可以执行任意代码）</p>
+
+    <div class="demo-label" style="margin-top:20px;">▼ 演示 4：键盘事件</div>
+    <p style="font-size:14px;">按下键盘任意键试试（焦点需在页面内）：</p>
+    <p>你按下的键：<strong id="keyDisplay" style="font-size:24px;color:#4a90d9;">—</strong></p>
+  </div>
+
+  <script>
+    // ===== 演示 1：点击计数器 =====
+    var count = 0;
+    var counterEl = document.getElementById("counter");
+
+    // 获取三个按钮
+    var btnPlus = document.getElementById("btnPlus");
+    var btnMinus = document.getElementById("btnMinus");
+    var btnReset = document.getElementById("btnReset");
+
+    // 绑定 + 按钮的点击事件
+    btnPlus.addEventListener("click", function() {
+      count = count + 1;              // 计数器加 1
+      counterEl.textContent = count;  // 更新页面显示
+    });
+
+    // 绑定 - 按钮的点击事件
+    btnMinus.addEventListener("click", function() {
+      count = count - 1;
+      counterEl.textContent = count;
+    });
+
+    // 绑定重置按钮
+    btnReset.addEventListener("click", function() {
+      count = 0;
+      counterEl.textContent = count;
+    });
+
+    // ===== 演示 2：input 事件 —— 实时预览 =====
+    var liveInput = document.getElementById("liveInput");
+    var livePreview = document.getElementById("livePreview");
+
+    liveInput.addEventListener("input", function() {
+      // this 指向触发事件的元素（即 liveInput）
+      var text = this.value;
+      if (text === "") {
+        livePreview.textContent = "你输入的内容会实时出现在这里";
+        livePreview.style.color = "#999";
+      } else {
+        livePreview.textContent = "你输入了：" + text;
+        livePreview.style.color = "#333";
+      }
+    });
+
+    // ===== 演示 3：mouseenter / mouseleave =====
+    var hoverBox = document.getElementById("hoverBox");
+
+    hoverBox.addEventListener("mouseenter", function() {
+      this.textContent = "鼠标在上面！";
+      this.style.backgroundColor = "#4a90d9";
+      this.style.color = "#fff";
+      this.style.borderColor = "#4a90d9";
+    });
+
+    hoverBox.addEventListener("mouseleave", function() {
+      this.textContent = "把鼠标移到我上面";
+      this.style.backgroundColor = "transparent";
+      this.style.color = "#333";
+      this.style.borderColor = "#ccc";
+    });
+
+    // ===== 演示 4：键盘事件 =====
+    var keyDisplay = document.getElementById("keyDisplay");
+
+    // keydown 事件绑定在整个 document 上
+    document.addEventListener("keydown", function(event) {
+      // event 是事件对象，event.key 就是按下的键名
+      keyDisplay.textContent = event.key;
+    });
+  </script>
+
+  <div class="nav">
+    <a href="day5.html">← 第 5 天</a>
+    <a href="index.html">目录</a>
+    <a href="day7.html">第 7 天 →</a>
+  </div>
+</body>
+</html>

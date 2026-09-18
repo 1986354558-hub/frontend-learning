@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7天前端入门 · 学习路线</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f8f7f4;
+      color: #2c2c2c;
+      line-height: 1.8;
+      padding: 48px 16px;
+    }
+    .container { max-width: 640px; margin: 0 auto; }
+    h1 { font-size: 28px; margin-bottom: 8px; letter-spacing: 2px; }
+    .subtitle { color: #777; font-size: 15px; margin-bottom: 40px; }
+    .day-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+    .day-item {
+      display: block; background: #fff; border-radius: 8px; padding: 24px;
+      text-decoration: none; color: inherit; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .day-item:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-1px);
+    }
+    .day-num {
+      display: inline-block; background: #4a90d9; color: #fff;
+      font-size: 13px; padding: 2px 12px; border-radius: 99px; margin-bottom: 8px;
+    }
+    .day-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .day-desc { color: #666; font-size: 14px; }
+    .tips {
+      margin-top: 40px; background: #fff3cd; border-radius: 8px;
+      padding: 20px; font-size: 14px; color: #856404;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>7天前端入门</h1>
+    <p class="subtitle">每天一个知识点，每个知识点一个可运行的小案例。所有代码都附有逐行中文注释。</p>
+    <ul class="day-list">
+      <li><a class="day-item" href="day1.html"><span class="day-num">第 1 天</span><div class="day-title">HTML 标签 —— 网页的骨架</div><div class="day-desc">认识 &lt;html&gt;、&lt;h1&gt;、&lt;p&gt;、&lt;img&gt;、&lt;a&gt; 等基础标签，搭出第一个网页。</div></a></li>
+      <li><a class="day-item" href="day2.html"><span class="day-num">第 2 天</span><div class="day-title">CSS 样式 —— 给网页穿上衣服</div><div class="day-desc">颜色、字体、背景、边距、边框……学会用 CSS 把网页变好看。</div></a></li>
+      <li><a class="day-item" href="day3.html"><span class="day-num">第 3 天</span><div class="day-title">CSS Flexbox —— 轻松排版</div><div class="day-desc">用 display: flex 让元素自动对齐、居中、换行，告别混乱布局。</div></a></li>
+      <li><a class="day-item" href="day4.html"><span class="day-num">第 4 天</span><div class="day-title">JavaScript 基础 —— 变量与函数</div><div class="day-desc">let、const、字符串、数字、函数……认识网页的"大脑"。</div></a></li>
+      <li><a class="day-item" href="day5.html"><span class="day-num">第 5 天</span><div class="day-title">DOM 操作 —— JS 操控网页</div><div class="day-desc">用 JavaScript 找到网页元素，改文字、换颜色、增减内容。</div></a></li>
+      <li><a class="day-item" href="day6.html"><span class="day-num">第 6 天</span><div class="day-title">事件处理 —— 让网页"活"起来</div><div class="day-desc">点击按钮、输入文字、提交表单——学会响应用户的每一个操作。</div></a></li>
+      <li><a class="day-item" href="day7.html"><span class="day-num">第 7 天</span><div class="day-title">综合实战 —— 待办事项小工具</div><div class="day-desc">综合前 6 天的知识，从零做一个能增删改查的 Todo List。</div></a></li>
+    </ul>
+    <div class="tips"><strong>使用方式</strong>每天打开对应的 HTML 文件（双击即可在浏览器打开），页面上半部分是带注释的代码讲解，下半部分是运行效果。边看边改、边改边刷新，这是学前端最快的方式。</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  第 1 天：HTML 标签 —— 网页的骨架
+  ============================================================
+  HTML 是什么？HTML（超文本标记语言）是网页的"骨架"。
+  网页上所有的文字、图片、链接、按钮，本质上都是一个一个"标签"拼起来的。
+
+  标签的写法：<标签名>内容</标签名>
+  例如：<h1>我是标题</h1>
+
+  本章你会学到这些标签：
+    h1~h6  → 标题（数字越大，字号越小）
+    p      → 段落
+    a      → 超链接（点击跳转）
+    img    → 图片
+    ul/li  → 无序列表（点点列表）
+    strong → 加粗强调
+    br     → 换行
+-->
+<html lang="zh-CN">
+  <!--    ↑ 告诉浏览器：这是一份中文网页                    -->
+<head>
+  <meta charset="UTF-8">
+  <!-- ↑ 字符编码设为 UTF-8，这样中文才不会乱码           -->
+  <title>第1天：HTML 标签</title>
+  <!-- ↑ <title> 里的文字会显示在浏览器标签页上            -->
+  <style>
+    /* ===== 页面整体风格 ===== */
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      /* ↑ 优先使用苹方字体, 其次是微软雅黑, 都没有就用系统默认 sans-serif */
+      max-width: 700px;   /* 内容最大宽度 700px，防止文字铺满屏幕不好看 */
+      margin: 0 auto;     /* 上下 0、左右自动 → 居中对齐 */
+      padding: 32px 20px; /* 页面内边距：上下 32px，左右 20px */
+      background: #fafaf8;/* 背景色：暖白 */
+      color: #333;        /* 文字颜色：深灰 */
+      line-height: 1.9;   /* 行高 1.9 倍，读起来不累 */
+    }
+    h1 { color: #4a90d9; }
+    h2 { color: #555; border-bottom: 2px solid #eee; padding-bottom: 8px; }
+    /* ↑ h2 标题加个浅色底线，区分章节 */
+
+    /* 代码块样式 */
+    .code-box {
+      background: #2d2d2d;    /* 深色背景，模拟编辑器 */
+      color: #e6e6e6;         /* 浅色文字 */
+      padding: 16px;
+      border-radius: 8px;
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      /* ↑ 等宽字体，代码看起来对齐整齐                   */
+      font-size: 14px;
+      overflow-x: auto;       /* 代码太长时出现横向滚动条  */
+      white-space: pre;       /* 保留空格和换行              */
+      line-height: 1.7;
+    }
+    .demo {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 12px;
+    }
+    .demo-label {
+      font-size: 12px; color: #999; text-transform: uppercase;
+      letter-spacing: 2px; margin-bottom: 8px;
+    }
+    .nav { margin-top: 48px; text-align: center; }
+    .nav a {
+      display: inline-block; background: #4a90d9; color: #fff;
+      padding: 10px 28px; border-radius: 8px; text-decoration: none;
+      font-size: 15px;
+    }
+    .nav a:hover { background: #357abd; }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== 讲解区 ==================== -->
+  <h1>第 1 天：HTML 标签 —— 网页的骨架</h1>
+
+  <h2>一、标题标签 &lt;h1&gt; ~ &lt;h6&gt;</h2>
+  <p>HTML 提供了 6 级标题，h1 最大，h6 最小。搜索引擎会根据 h1 判断页面主题。</p>
+
+  <div class="code-box">
+&lt;h1&gt;我是一级标题&lt;/h1&gt;
+&lt;h2&gt;我是二级标题&lt;/h2&gt;
+&lt;h3&gt;我是三级标题&lt;/h3&gt;
+  </div>
+
+  <h2>二、段落标签 &lt;p&gt; 和 换行标签 &lt;br&gt;</h2>
+  <p>p 标签包住一段文字；br 是"硬换行"，另起一行但不另起段落。</p>
+
+  <div class="code-box">
+&lt;p&gt;这是一个段落。浏览器会自动在段落之间加一些间距。&lt;/p&gt;
+&lt;p&gt;这是第二个段落。注意和上面段落之间的空白，这是 p 标签自带的。&lt;/p&gt;
+  </div>
+
+  <h2>三、超链接 &lt;a&gt; 和 图片 &lt;img&gt;</h2>
+  <p>a 标签的 href 属性指定跳转地址；img 标签的 src 属性指定图片路径。</p>
+
+  <div class="code-box">
+&lt;a href="https://www.baidu.com"&gt;点我去百度&lt;/a&gt;
+
+&lt;img src="图片地址.jpg" alt="图片描述" width="200"&gt;
+  </div>
+
+  <h2>四、列表标签 &lt;ul&gt; + &lt;li&gt;</h2>
+  <p>ul = unordered list（无序列表），li = list item（列表项）。会自动在前面加小圆点。</p>
+
+  <div class="code-box">
+&lt;ul&gt;
+  &lt;li&gt;HTML&lt;/li&gt;
+  &lt;li&gt;CSS&lt;/li&gt;
+  &lt;li&gt;JavaScript&lt;/li&gt;
+&lt;/ul&gt;
+  </div>
+
+  <!-- ==================== 演示区 ==================== -->
+  <h2>⬇ 下面是以上代码的实际效果</h2>
+
+  <div class="demo">
+    <div class="demo-label">▼ 标题演示</div>
+    <h1>我是一级标题</h1>
+    <h2>我是二级标题</h2>
+    <h3>我是三级标题</h3>
+
+    <div class="demo-label">▼ 段落演示</div>
+    <p>这是一个段落。浏览器会自动在段落之间加一些间距。</p>
+    <p>这是第二个段落。注意和上面段落之间的空白，这是 p 标签自带的。</p>
+
+    <div class="demo-label">▼ 超链接 & 图片演示</div>
+    <p><a href="https://www.baidu.com">点我去百度</a></p>
+    <p>👉 图片标签需要真实的图片地址，这里用一个占位图示意：</p>
+    <img src="https://placehold.co/200x120/4a90d9/white?text=Hello" alt="示例图片" width="200">
+    <!-- ↑ src: 图片地址  alt: 图片加载失败时显示的文字  width: 宽度 -->
+
+    <div class="demo-label">▼ 列表演示</div>
+    <ul>
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>JavaScript</li>
+    </ul>
+  </div>
+
+  <!-- ==================== 导航 ==================== -->
+  <div class="nav">
+    <a href="index.html">← 返回目录</a>
+    <a href="day2.html">第 2 天：CSS 样式 →</a>
+  </div>
+
+</body>
+</html>

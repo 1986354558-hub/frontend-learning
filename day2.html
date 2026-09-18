@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  第 2 天：CSS 样式 —— 给网页穿上衣服
+  ============================================================
+  CSS（层叠样式表）负责网页的"外观"：颜色、大小、间距、背景……
+  如果说 HTML 是骨架，那 CSS 就是皮肉 + 衣服。
+
+  核心概念：选择器 + 属性 + 值
+  h1 {                     ← 选择器：我要给谁加样式？（所有 h1 标签）
+    color: red;            ← 属性: 值 → 把文字颜色改成红色
+    font-size: 24px;       ← 字体大小 24 像素
+  }
+
+  本章你会学到：
+    color / background-color  → 颜色
+    font-size / font-weight   → 字号/粗细
+    width / height            → 宽高
+    margin / padding          → 外边距/内边距
+    border / border-radius    → 边框/圆角
+    text-align                → 文字对齐
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>第2天：CSS 样式</title>
+  <style>
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      max-width: 700px; margin: 0 auto; padding: 32px 20px;
+      background: #fafaf8; color: #333; line-height: 1.9;
+    }
+    h1 { color: #4a90d9; }
+    h2 { color: #555; border-bottom: 2px solid #eee; padding-bottom: 8px; }
+    .code-box {
+      background: #2d2d2d; color: #e6e6e6; padding: 16px;
+      border-radius: 8px; font-family: monospace; font-size: 14px;
+      overflow-x: auto; white-space: pre; line-height: 1.7;
+    }
+    .demo {
+      background: #fff; border: 1px solid #e0e0e0;
+      border-radius: 8px; padding: 20px; margin-top: 12px;
+    }
+    .demo-label {
+      font-size: 12px; color: #999; letter-spacing: 2px; margin-bottom: 8px;
+    }
+    .nav { margin-top: 48px; text-align: center; }
+    .nav a {
+      display: inline-block; background: #4a90d9; color: #fff;
+      padding: 10px 28px; border-radius: 8px; text-decoration: none;
+      font-size: 15px; margin: 0 6px;
+    }
+    .nav a:hover { background: #357abd; }
+
+    /* ===== 以下是为了演示专门写的样式，正文里会解释 ===== */
+
+    /* --- 颜色演示用 --- */
+    .red-text { color: red; }
+    .blue-bg { background-color: #4a90d9; color: #fff; padding: 12px; }
+
+    /* --- 盒子模型演示用 --- */
+    .box-demo {
+      background: #e8f0fe;         /* 内容区：浅蓝 */
+      width: 200px;                /* 内容宽度 200px */
+      height: 60px;                /* 内容高度 60px */
+      padding: 20px;               /* 内边距：内容到边框之间的距离 */
+      border: 3px solid #4a90d9;   /* 边框：3px 粗，实线，蓝色 */
+      margin: 24px auto;           /* 外边距：上下 24px，左右自动居中 */
+      text-align: center;          /* 文字水平居中 */
+      line-height: 60px;           /* 行高 = 内容高 → 文字垂直居中 */
+      border-radius: 8px;          /* 圆角 8px */
+    }
+  </style>
+</head>
+<body>
+
+  <h1>第 2 天：CSS 样式 —— 给网页穿上衣服</h1>
+
+  <!-- ==================== 讲解区 ==================== -->
+  <h2>一、CSS 写在哪里？</h2>
+  <p>CSS 可以写在 HTML 的 &lt;style&gt; 标签里（本页所有案例都是这样），也可以写在单独的 .css 文件里再引入。</p>
+
+  <h2>二、选择器：你想给谁加样式？</h2>
+  <p>选中 HTML 标签有三种常用方式：</p>
+
+  <div class="code-box">
+/* 方法1：标签选择器 —— 选中所有同名标签 */
+h1 { color: red; }
+
+/* 方法2：类选择器 —— 选中所有 class="xxx" 的元素（最常用！）*/
+.highlight { background-color: yellow; }
+
+/* 方法3：id 选择器 —— 选中唯一 id="xxx" 的元素 */
+#special { font-size: 20px; }
+  </div>
+
+  <h2>三、颜色：color 和 background-color</h2>
+  <div class="code-box">
+.red-text { color: red; }                    /* 文字变红            */
+.blue-bg { background-color: #4a90d9; }      /* 背景变蓝（用十六进制）*/
+  </div>
+
+  <h2>四、盒子模型：margin、padding、border</h2>
+  <p>每个 HTML 元素都可以看作一个"盒子"，从外到内依次是：<br>
+  margin（外边距） → border（边框） → padding（内边距） → content（内容）</p>
+  <div class="code-box">
+.box-demo {
+  width: 200px;               /* 内容区宽 */
+  height: 60px;               /* 内容区高 */
+  padding: 20px;              /* 内边距：文字和边框之间留白 */
+  border: 3px solid #4a90d9;  /* 边框：粗细 3px，实线，蓝色 */
+  margin: 24px auto;          /* 外边距：上下 24px，左右自动(居中) */
+  border-radius: 8px;         /* 圆角 8px */
+}
+  </div>
+
+  <!-- ==================== 演示区 ==================== -->
+  <h2>⬇ 下面是以上代码的实际效果</h2>
+
+  <div class="demo">
+    <div class="demo-label">▼ 文字颜色演示</div>
+    <p>这段文字是<span class="red-text">红色的</span>，其余保持默认颜色。</p>
+
+    <div class="demo-label">▼ 背景色演示</div>
+    <p class="blue-bg">这段文字有蓝色背景和白色文字。</p>
+
+    <div class="demo-label">▼ 盒子模型演示</div>
+    <p>下面这个蓝色框就是一个典型的"盒子"，试试理解它的每一层：</p>
+    <div class="box-demo">我是盒子里的内容</div>
+    <p style="font-size:13px;color:#888;">
+      灰色文字到蓝色边框之间 → padding（内边距）<br>
+      蓝色边框本身 → border<br>
+      边框到外面文字之间 → margin（外边距）<br>
+      四个角变圆了 → border-radius
+    </p>
+  </div>
+
+  <div class="nav">
+    <a href="day1.html">← 第 1 天</a>
+    <a href="index.html">目录</a>
+    <a href="day3.html">第 3 天 →</a>
+  </div>
+
+</body>
+</html>
